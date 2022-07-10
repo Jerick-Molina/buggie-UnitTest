@@ -11,6 +11,7 @@ using Dapper;
 using Moq;
 using Moq.Protected;
 using Buggie.Logic;
+using BuggieUnit.UnitTest.Logic;
 
 namespace BuggieUnit
 {
@@ -19,59 +20,28 @@ namespace BuggieUnit
         [Fact]
         public  async Task  Get_Users_Validation()
         {   
-           
+           Logic logic = new Logic();
             using (var mock = AutoMock.GetLoose())
             {
               var sql = "select * from test";
               mock.Mock<IMySqlDataAccess>()
              .Setup(x => x.LoadData<User,dynamic>(sql, ""))
-             .Returns(GetUserSamples());
+             .Returns(logic.GetAllUsers());
 
-             var cls =  mock.Create<UserAccess>();
-             List<User> actual =  cls.GetUsers().Result;
+            var cls =  mock.Create<UserAccess>();
+            List<User> actual =  cls.GetUsers().Result;
 
 
-             List<User> expected =  GetUserSamples().Result;
+            List<User> expected =  logic.GetAllUsers().Result;
 
            
             for(var i = 0; i < expected.Count;i++){
 
                Assert.Equal(expected[i].FirstName,actual[i].FirstName);
             }
-         
-              
+  
             }
-               
-        
-            
         }
-
-        
-
-        private async Task<List<User>> GetUserSamples()
-        {
-             List<User> output = new List<User>()
-            {
-                new User
-                {
-                    FirstName = "Squidward",
-                    LastName = "Tentacles"
-                },
-                new User
-                {
-                    FirstName = "Patrick",
-                    LastName = "Star"
-                },
-                new User
-                {
-                    FirstName = "SpongeBob",
-                    LastName = "SquarePants"
-                },
-             
-            };
-
-         
-            return  output.ToList();
-        }
+      
     }
 }

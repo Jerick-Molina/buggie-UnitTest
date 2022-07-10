@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace BuggieUnit
+namespace BuggieUnit.UnitTest
 {
     public class Ticket_Test
     {
